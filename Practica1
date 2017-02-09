@@ -1,0 +1,58 @@
+# SeriesdeTiempo
+#? Para obtener ayuda sobre un comando específico
+#??para buscar documentación en R sobre un comando específico
+# ls() para obtener la lista de objetos
+# funcion c para obtener filas o columnas no secuenciales (concatenar)
+#object[c(3,6,9),5]
+#Se organiza de esta manera object[fila,columna]
+#bibliografía http://www.ats.ucla.edu/stat/
+#http://stackoverflow.com/
+x<-1:25
+x
+mean(x)
+ls()
+y<-2:19
+ls()
+x2<-c(2,4,6,8) 
+x3<-c(.4,1,.6,2)#Creacion de vectores
+#Forma alternativa de crear vectores, secuencia de numeros de 8 a 80 con intervalos de 4
+y<-seq(8,80,4)
+z<-seq(550,1000,50)
+length(z)
+#Creacion de funciones 
+media<-sum(x)/length(x)
+?sum
+#Borrar un vector
+rm(x)#remove
+ls()
+rm(list=ls())#Para borrar todos los objetos 
+ls()
+#Vectores con caracteres
+nse<-c("alto","medio","bajo") #nivel socioeconómico.
+colorsemaforo<-c("verde","amarillo","rojo")
+#Vectores con distribucion de probabilidad
+?rnorm
+x<-rnorm(100)
+x
+
+plot(x)
+b<-(1:100)
+b
+plot(b,x)
+y=x+rnorm(100,mean = 50, sd=0.5)
+cor(x,y)
+
+mean(y)
+var(y)
+sd(y)
+sqrt(var(y))
+
+#Operadores relacionales
+# <,<=,>=,==,!=
+8==7.99999999999999999999999999999999999999999999999999
+8>10
+x<-17
+x==17
+a<-2
+b<-6
+a<b&a<3

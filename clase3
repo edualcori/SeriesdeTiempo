@@ -1,0 +1,38 @@
+setwd("C://Users//Sala-F17//Documents")
+install.packages("readxl")
+library(readxl)
+petroleo<-read_excel("C://Users//Sala-F17//Desktop//petroleo.xlsx")
+gdpmexico<-read_excel("C://Users//Sala-F17//Desktop//gdpmexico.xlsx")
+mort<-read_excel("C://Users//Sala-F17//Desktop//mort_rate.xlsx")
+importa<-read_excel("C://Users//Sala-F17//Desktop//importa.xlsx")
+rates<-read_excel("C://Users//Sala-F17//Desktop//rates.xlsx")
+ruralmexico<-read_excel("C://Users//Sala-F17//Desktop//ruralmexico.xlsx")
+
+petroleo.ts<-ts(petroleo,frequency = 5,start=(1))
+plot(petroleo.ts,ylab="Precio ",xlab="Periodo",main="Precio Del Petroleo",col="red")
+?decompose
+petoleo1.ts=ts(petroleo,frequency = 5)
+descomp<-decompose(petroleo.ts,"additive")
+show(descomp)
+#Gráficos
+plot(as.ts(descomp$seasonal))
+plot(as.ts(descomp$trend))
+plot(as.ts(descomp$random))
+plot(descomp)
+
+#dgp desde 1960 hasta 2014
+productots<-ts(gdpmexico,frequency = 4,start = (1))
+descompon<-decompose(productots,"multiplicative")
+plot(descompon)
+?ts
+#Frecuencia son el numero de observaciones por unidad de tiempo
+#1= anual, 12=mensual,
+
+mortats<-ts(mort,frequency = 12,start = (1))
+mortdes<-decompose(mortats,"additive")
+plot(mortdes)
+#tendencia decreciente 
+
+importats<-ts(importa,frequency = 5,start = (1))
+importads<-decompose(importats,"additive")
+plot(importads)

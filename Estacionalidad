@@ -1,0 +1,31 @@
+setwd("C://Users//Sala-F17//Documents")
+install.packages("readxl")
+library(readxl)
+petroleo<-read_excel("C://Users//Sala-F17//Desktop//petroleo.xlsx")
+gdpmexico<-read_excel("C://Users//Sala-F17//Desktop//gdpmexico.xlsx")
+mort<-read_excel("C://Users//Sala-F17//Desktop//mort_rate.xlsx")
+importa<-read_excel("C://Users//Sala-F17//Desktop//importa.xlsx")
+rates<-read_excel("C://Users//Sala-F17//Desktop//rates.xlsx")
+ruralmexico<-read_excel("C://Users//Sala-F17//Desktop//ruralmexico.xlsx")
+
+petroleo.ts<-ts(petroleo)
+
+install.packages("tseries")#Para encontrar los estadisticos de estacionalidad.
+library(tseries)
+?acf
+
+acf(petroleo.ts,lag=20,plot=FALSE)#pARA ESTIMAR LA FUCNION DE AUTOCORRELACION PARA 20 RETRASOS
+acf(petroleo.ts,plot=TRUE)#En una serie estacionaria los valores de acf caen relativamente rápido a 0, con la gráfica
+
+#Para ver si la serie es estacionaria se utilizan dos estadisticos 
+#1) KWIATKOWSKI-PHILLIPS-SCHMIDT-SHIN (KPSS), basado en la descomposición clásica de la serie, está estimado como una regresión lineal(mínimos cuadrados ordinarios)
+#Se hace una transformación logaritmica para que cualquier comportamiento exponencial que tengamos se transforme a lineal.
+#Transformamos logaritmicamente, para ambas pruebas se utiliza.
+petroleo1ts<-ts(log(petroleo.ts))
+kpss.test(petroleo1ts)
+#como p-value es menor a .05 se concluye que no es estacionario. Valores de p-value menores a .05 indican valores no estacionarios 
+#2) T de Dickey-Fuller aumentada
+adf.test(petroleo1ts,alternative = "stationary") # Valores de p-value menores a .05 indican valores estacionarios
+ #Por lo tanto podemos concluir que la serie no es estacionaria.
+
+Box.test(petroleo1ts, lag = 20, type = c("Box-Pierce", "Ljung-Box"), fitdf = 0)

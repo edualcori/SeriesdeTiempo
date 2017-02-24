@@ -1,0 +1,33 @@
+base<-read_excel("C://Users//Sala-F17//Desktop//base.xlsx")
+indicators<-read_excel("C://Users//Sala-F17//Desktop//indicators.xlsx")
+library(haven)
+base<-read_dta("C://Users//Sala-F17//Desktop//base.dta")#Para descargar archivos de stata
+?lm#Para ajustar modelos lineales
+ls(base)
+#Se puede trabajar con una submuestra de una muestra y está bien
+#Con la transformación logaritmica se disminuye la covarianza entre los datos
+#REGRESIÓN LINEAL
+#Guardamos el modelo con una nueva variable
+#lm(y~x,base)
+baselm<-lm(peso~talla,base)
+#Para obtener los parámetros de la regresión(Las betas)
+betas=coefficients(baselm);betas
+#Bo=-225.73 , B1=1.894393 #Por cada unidad aumentada en la talla, el peso aumenta 1.894393
+summary(baselm)$r.squared
+#Es un buen ajuste porque r-squared es .7868967 .Aproximadamente el 78.68% de la variación en el peso está explicado por la talla  
+
+#Prueba F
+#Si los errores son independientes de x y estos están normalmente distribuidos, puede establecerse si existe alguna asociación significativa entre x e y,
+#Bajo la hipótesis nula de que B=0
+#Si F<.05 se rechaza la hipótesis nula 
+summary(baselm)
+
+#Valores predichos Iindice de confianza 95%
+predict(baselm,base,interval = "predict",level = 0.95)#Da el peso estimado para cada persona con el intervalo de confianza para cada uno
+
+#Gráfico de residuos 
+residuos<-residuals(baselm)
+plot(jitter(residuos)~jitter(talla),ylab = "Residuos",xlab="Talla",data=base)
+
+abline(0,0,col=2)
+abline?

@@ -1,0 +1,47 @@
+ventas<-read_excel("C://Users//Sala-F17//Desktop//ejemplo.xlsx")
+ventas.ts<-ts(ventas, start=c(2012,1),frequency=6)
+plot(ventas.ts,xlab="Periodo de Tiempo",ylab = "Ventas en millones",main = "Ventas en millones de Euros")
+
+ventas.descom<-decompose(ventas.ts,"additive")
+
+cycle(ventas.ts)
+#Time Series:
+#Start = c(2012, 1)  #La serie empieza en el primer bimestre de 2012 y 
+#End = c(2015, 6) termina en el sexto bimestre de 2015
+#Frequency = 6 
+
+
+#Diagramas de caja
+boxplot(ventas.ts~cycle(ventas.ts))
+#La linea más gruesa da la media para cada periodo, los bigotes, el mayor y menor valor, y el tamaño de la caja el rango en que están las cosas
+
+plot(as.ts(ventas.descom$seasonal))
+plot(as.ts(ventas.descom$trend))
+plot(as.ts(ventas.descom$random))
+plot(ventas.descom)
+
+
+par(mfrow=c(1,3))#Es un vector, una fila, tres columnas , asi; en una fila y tres columnas me va a hacer las gráficas
+plot(as.ts(ventas.descom$seasonal))
+plot(as.ts(ventas.descom$trend))
+plot(as.ts(ventas.descom$random))
+#Descomponer bajo el modelo clásico una serie de tiempo y argumentar sobre el comportamiento en el año tal
+
+#Extraer tendencia (Tt) con el método loose, function(stl)
+ventas1.ts<-ts(ventas[1:24,1],frequency=6,start =c(2012,1)) #[1:24,1]Tengo 24 filas y 1 columna
+class(ventas1.ts)
+
+ventas.stl<-stl(ventas1.ts,s.window = "periodic") #s.window="periodic" , quiere decir que todo es periódico.
+names(ventas.stl)
+ventas.stl #Da los valores estimados para tendencia,estacionalidad y lo restante.
+
+
+ventas.tend<-ventas.stl$time.series[,2]
+ventas.tend
+
+plot(ventas1.ts,col="blue",main="Ventas en millones de Euros",ylab="valores de la tendencia",xlab="Periodo")#Es el gáfico normal de la serie
+lines(ventas.tend,col="red")#Pone la linea de tendencia
+
+mean(ventas.tend)
+summary(ventas.tend)
+#Aislando la tendencia de las ventas, se puede decir que el promedio de las ventas es 7.15

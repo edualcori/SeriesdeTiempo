@@ -1,0 +1,54 @@
+
+
+
+
+#Regresión con series de tiempo (Yt) y una variable predictora (Xt)
+#Función(tslm)
+#Se utiliza para adaptar modelos lineales a series temporales incluyendo componentes de estacionalidad,tendencia,tc
+#tslm(formula,data,subset,lambda=NULL,biasadj=FALE)
+
+install.packages("forecast")
+library(forecast)
+
+indicators<-read_excel("C://Users//Sala-F17//Desktop/indicators.xlsx")
+
+
+
+indicators.ts<-ts(indicators)
+
+
+View(indicators.ts)
+plot(indicators.ts)
+
+estimado.ts<-tslm(gdp_capita~co2,data = indicators.ts)#Es el modelo lineal de regrsión de una serie de tiempo, gdp=y,co2=x
+
+summary(estimado.ts)
+#stimate Std. Error t value Pr(>|t|)    
+#(Intercept) -2.145e+03  3.916e+02  -5.476 1.28e-06 ***
+#  co2          2.119e-02  1.270e-03  16.689  < 2e-16 ***  el 2.119e-02 es el efecto que tiene x en y, en una unidad de cambio en x  
+#Adjusted R-squared:  0.8396 la variabilidad en y explicada por x
+
+
+plot(gdp_capita~co2,data = indicators.ts,ylab="Producto interno Bruto",xlab="Toneladas de C02")
+abline(estimado.ts,col="blue")
+
+#Hacer la gráfica de los residuos 
+
+#Funcion no lineal (log-log)
+par(mfrow=c(1,2))
+estimado.ts2<-lm(log(gdp_capita)~log(co2),data=indicators.ts)
+summary(estimado.ts2)
+plot(jitter(gdp_capita)~jitter(co2),xlab="Tonealdas de co2",ylab="Gross Domestic Product",data = indicators.ts)
+lines(1:54,exp(estimado.ts$coefficients[1]+estimado.ts2$coefficients[2]*log(1:54)))#coeficcients[1] es B0 y coefficients[2] es B1
+
+plot(log(jitter(gdp_capita))~log(jitter(co2)),xlab="log(co2)",ylab="log(GDP)",data=indicators.ts)
+abline(estimado.ts2,col="red")
+#Si dice que el gráfico no cabe se pone anteriormente un windows()
+
+#Residuos log-log
+
+residuals.log<-residuals(estimado.ts2)
+plot(jitter(residuals.log,amount=.005)~jitter(log(co2)),ylab="Residuos",xlab="log(co2)",data=indicators.ts,col="blue")
+summary(residuals.log)
+
+#Tarea hacer el de ejemplo 3

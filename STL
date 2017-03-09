@@ -1,0 +1,69 @@
+#Por qué es importante identificar la tendencia de una serie de tiempo
+#Si el nivel crítico asociado a al estadístico F, es menor a .05rechazamos la hipótesis de igualdad de medias
+#Por qué se usa escomposición muliplicativa o aditiva.
+#P-VALUE<.05 EXISTE UNA RELACION LINEAL SIGNIFICATIVA
+
+install.packages("xlsx")
+consumop<-read_excel("C://Users//Sala-F17//Desktop//ejemplo3.xlsx")
+
+consumop.ts<-ts(consumop,start=c(1910,1),frequency = 12)
+plot(consumop.ts,xlab="Periodo de Tiempo",ylab = "consumo medio de productos",main = "CONSUMO",col="blue")
+
+consumo.des<-decompose(consumop.ts,"multiplicative")
+#
+#Additive The seasonal variation looks constant. It doesn’t change when the time series increase. We should use the additive model.
+
+#When the time series increase the seasonal variation increase more and more. We should use the multiplicative model.
+
+#The additive model is useful when the seasonal variation is relatively constant over time.
+#The multiplicative model is useful when the seasonal variation increases over time.
+cycle(consumop.ts)
+boxplot(consumop.ts~cycle(consumop.ts))
+
+par(mfrow=c(1,3))#Es un vector, una fila, tres columnas , asi; en una fila y tres columnas me va a hacer las gráficas
+plot(as.ts(consumo.des$seasonal))
+plot(as.ts(consumo.des$trend))
+plot(as.ts(consumo.des$random))
+plot(consumo.des)
+#x11() o windows() para cuando no grafica porque dice que es mas grande que el cuadro de diseño
+
+windows()
+#Extraer tendencia () con el método Loess, función stl, mediante suavizamiento
+#Para la función stl se tiene que descomponer poniendo los datos asi de [1:56,1 ]
+consumop.ts<-ts(consumop[1:56,1],frequency=12,start=c(1910,1),end = c(1915,8))
+class(consumop.ts)
+cycle(consumop.ts)
+View(consumop.ts)# Debemos revisar con este view que en la serie el titulo sea consumop.ts para verificar qu se cambio a serie de tiemp
+
+
+
+consumo.stl<-stl(consumop.ts, s.window = "periodic",robust = T)# Con robust, el stl hace el modelo robusto aunque sea diferente la longitud de mi serie y el cycle
+consumo.stl
+
+consumo.tend<-consumo.stl$time.series[,2]
+consumo.tend
+
+plot(consumop.ts,col="blue",main="Consumo de productos",ylab="Tendencia",xlab="periodo")
+lines(consumo.tend,col="red",ylab="Tendencia")
+
+
+#Eliminar tendencia(Tt) de Yt
+consumo.ntend=consumop.ts/consumo.des$trend  #Se pone entre porque es multiplicativa, si fuera aditiva le restamos 
+plot(as.ts(consumo.ntend))
+
+par(mfro=c(1,2))
+plot((consumop.ts))
+lines(consumo.ntend,col="red")
+
+summary(consumo.tend)
+
+#Ajuste estacional
+
+install.packages("fpp")
+lybrary(fpp)
+
+plot(consumop.ts)
+plot(consumo.stl)
+
+
+monthplot(consumo.stl$time.series[,"seasonal"],main="Componente estacional por meses",ylab="Componente estacionario")

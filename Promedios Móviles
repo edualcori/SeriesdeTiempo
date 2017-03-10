@@ -1,0 +1,33 @@
+#Promedios móviles
+install.packages("fpp")
+library(fpp)
+install.packages("xlsx")
+library(readxl)
+ventas<-read_excel("C://Users//Sala-F17//Desktop//ma_r.xlsx")
+help(ma)
+
+ventas.ts<-ts(ventas,frequency = 1,start = c(1990),end=c(2016)
+ma(ventas.ts,order=3)
+ma(ventas.ts,order=5)
+ma(ventas.ts,order=7)
+ma(ventas.ts,order=9)
+
+
+plot(ventas.ts, main="Ventas de la empresa X",xlab="Periodo de tiempo", ylab="Ventas")
+lines(ma(ventas.ts,3),col="red")
+lines(ma(ventas.ts,5),col="green")
+lines(ma(ventas.ts,7),col="blue")
+lines(ma(ventas.ts,9),col="brown")
+
+
+#Promedios Móviles centrados(Promedio de los promedios móviles)
+
+ventas.ts2<-window(ventas.ts,start=1990)
+ ma4<-ma(ventas.ts2,order=4,centre=FALSE)
+ ma4X2<-ma(ventas.ts2,order=4,centre=TRUE)
+
+ ma4X2
+
+ plot(ventas.ts2,main="Ventas de empresa X",ylab="Toneladad",xlab="Año")
+lines(ma4,col="blue")
+lines(ma4X2,col="red")

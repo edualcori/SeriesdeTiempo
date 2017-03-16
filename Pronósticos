@@ -1,0 +1,42 @@
+#Paquetes para hacer pronósticos
+install.packages("forecast")
+install.packages("fpp")
+ipc<-read_excel("C://Users//Sala-F17//Desktop//ipc.xlsx")
+ventas<-read_excel("C://Users//Sala-F17//Desktop//ejemplo3.xlsx")
+
+
+ventas.ts<-ts(ventas,start = c(2010,1), frequency = 12)
+
+plot(ventas.ts,xlab="Tiempo",ylab="Ventas en millones",main="Serie temporal")
+
+#Métodos de pronósticos
+#1) Método de la media(Average Method)
+help(meanf)
+meanf(ventas.ts,h=10,level = c(80,95))#level(80,95) son los intervalos de confianza
+#Point Forecast 223.9554 es el pronóstico para los diez periodos siguientes al último dato que tenemos 
+
+
+
+#2) Naive Method
+
+help("naive")
+
+naive(ventas.ts,h=10)
+#Para correr este módelo la serie debe tener estacionalidad
+
+#3) Naive estacional
+snaive(ventas.ts,10)
+
+
+#4) Método deriva, es con la función rwf
+rwf(ventas.ts,10)
+
+
+
+
+ventas.pron<-window(ventas.ts,start=c(2010))
+
+
+
+
+

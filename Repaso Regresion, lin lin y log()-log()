@@ -1,0 +1,40 @@
+base<-read_excel("C://Users//Sala-F17//Desktop//base.xlsx")
+plot(jitter(consumo)~jitter(ingresos),xlab="Ingresos",ylab="Consumo", data=base)
+estimado<-lm(consumo~ingresos,data=base)#Valores de la regresión
+
+abline(estimado,col="red")#Pone la linea a los valores de la regresión
+summary(estimado)
+
+#Intercepto=Bo
+#y=648.79+.24(ingreso)
+
+residuos<-residuals(estimado)
+residuos
+# Para la grafica de los residuos se grafica y vs x, n la de arriba era y vs x
+plot(jitter(residuos)~jitter(ingresos),ylab="Residuos",xlab="Ingresos",data=base)
+abline(0,0,col="red") #Se pone una line en 0 por el principio de media y varianza constante
+
+#"Los residuos deben estar aleatoriamente distribuidos, porque si tienen un patron se dice que hay heterocedasticidad
+#Heterocedasticidad: varianza diferente
+
+
+#Pronosticos con regresión
+fitted(estimado)[1]
+
+pronosticos<-forecast(estimado,newdata = data.frame(ingresos=2000))
+plot(pronosticos,xlab="Ingresos",ylab = "Consumo")
+
+#La linea que sale, la morada significa el 95% de confianza y lo gris el 80%
+648.28+.25*(2000)
+
+
+
+#Con log(), si se lo hacen solo a x es lin log, a los dos, log - log , a y log-lin
+
+estimado.l<-lm(log(consumo)~log(ingresos),data=base)#Valores de la regresión
+summary(estimado)
+
+plot(log(jitter(consumo))~log(jitter(ingresos)),xlab="Consumo",ylab="Ingresos",data=base)
+abline(estimado.l,col="red")
+residuals.log<-residuals(estimado.l)
+plot(jitter(residuals.log,amount=.005)~jitter(log(consumo)),ylab="Residuos",xlab="Consumo",data=base,col="blue")

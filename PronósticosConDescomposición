@@ -1,0 +1,31 @@
+compras<-read_excel("C://Users//Sala-F17//Desktop//base.xlsx")
+
+
+#Pronosticos con descomposición
+compras.st<-ts(compras,frequency=12,start=c(2000),end=c(2013))
+
+plot(compras.st,col="blue")
+
+
+comprasdes<-decompose(compras.st,"multiplicative")
+plot(comprasdes)
+
+
+##############Descomposición cpn ajuste estacional y de tendencia con la funcion stl()
+
+descompuestastl<-stl(compras.st,t.window = 12,s.window = "periodic")
+
+plot(descompuestastl)
+
+
+#Para los pronósticos
+
+pronosticos<-stl(compras.st,t.window = 12,s.window = "periodic",robust=T)
+
+ajustadas<-seasadj(pronosticos)
+plot(naive(ajustadas))
+
+pronosticos.naive<-forecast(pronosticos,"naive")
+plot(pronosticos.naive)
+
+View(pronosticos.naive)
